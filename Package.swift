@@ -8,7 +8,7 @@ let package = Package(
     .library(name: "DecodableRouting", targets: ["DecodableRouting"]),
   ],
   dependencies: [
-    .package(url: "https://github.com/kaishin/glide", from: "0.1.2"),
+    .package(url: "https://github.com/kaishin/glide", from: "0.0.6"),
   ],
   targets: [
     .target(

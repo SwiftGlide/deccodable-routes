@@ -1,0 +1,25 @@
+{
+  "object": {
+    "pins": [
+      {
+        "package": "Glide",
+        "repositoryURL": "https://github.com/kaishin/glide",
+        "state": {
+          "branch": null,
+          "revision": "20bb646e647c2e3da1a4e8e8bd35362be894000a",
+          "version": "0.0.6"
+        }
+      },
+      {
+        "package": "swift-nio",
+        "repositoryURL": "https://github.com/apple/swift-nio",
+        "state": {
+          "branch": null,
+          "revision": "e876fb37410e0036b98b5361bb18e6854739572b",
+          "version": "2.16.0"
+        }
+      }
+    ]
+  },
+  "version": 1
+}
