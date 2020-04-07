@@ -1,5 +1,4 @@
-// swift-tools-version:5.2
-
+// swift-tools-version:5.1
 import PackageDescription
 
 let package = Package(
@@ -8,18 +7,22 @@ let package = Package(
     .library(name: "DecodableRouting", targets: ["DecodableRouting"]),
   ],
   dependencies: [
-    .package(url: "https://github.com/kaishin/glide", from: "0.0.6"),
+    .package(path: "../glide"),
+    .package(url: "https://github.com/swift-server/async-http-client.git", from: "1.0.0"),
+    .package(url: "https://github.com/apple/swift-nio", from: "2.12.0")
   ],
   targets: [
     .target(
       name: "DecodableRouting",
       dependencies: [
-        .product(name: "Glide", package: "glide"),
+        "Glide"
     ]),
     .testTarget(
       name: "DecodableRoutingTests",
       dependencies: [
-        .target(name: "DecodableRouting"),
+        "DecodableRouting",
+        "AsyncHTTPClient",
+        "NIO"
     ]),
   ]
 )
