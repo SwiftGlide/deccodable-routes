@@ -117,7 +117,7 @@ extension Router {
   ) -> Middleware {
     { request, response in
       guard match(method, request: request, matcher: matcher) else {
-        return .next
+        return request.successFuture(.next)
       }
 
       if throwing {
@@ -127,7 +127,7 @@ extension Router {
         if let decoded = try? transform(request) {
           return try handler(decoded)(request, response)
         } else {
-          return .next
+          return request.successFuture(.next)
         }
       }
     }

@@ -35,21 +35,21 @@ final class DecodableRouteTests: XCTestCase {
     let expectation = XCTestExpectation()
 
     performHTTPTest { app, client in
-      app.get("/\("categoryID", as: Int.self)/\("slug")") { (post: Post) in
+      app.get("/\("categoryID", as: Int.self)/\("slug")", transform: decodePath()) { (post: Post) in
         XCTAssertEqual(post.categoryID, 99)
         XCTAssertEqual(post.slug, "my-post")
 
         expectation.fulfill()
 
-        return { _, _ in
-          .json(post)
+        return { _, response in
+          response.successFuture(.json(post))
         }
       }
 
       app.get("\(wildcard: .all)") { request, response in
         XCTFail("The path expression didn't match the provided URL.")
         expectation.fulfill()
-        return .send("Oops")
+        return response.successFuture(.send("Oops"))
       }
 
       let request = try HTTPClient.Request(
@@ -68,14 +68,14 @@ final class DecodableRouteTests: XCTestCase {
     let expectation = XCTestExpectation()
 
     performHTTPTest { app, client in
-      app.get("/\("categoryID", as: Int.self)/\("slug")") { (post: Post) in
-        { _, _ in
-          .json(post)
+      app.get("/\("categoryID", as: Int.self)/\("slug")", transform: decodeQuery()) { (post: Post) in
+        { _, response in
+          response.successFuture(.json(post))
         }
       }
 
       app.get("\(wildcard: .all)") { request, response in
-        .send("Oops")
+        response.successFuture(.send("Oops"))
       }
 
       let request = try HTTPClient.Request(
@@ -106,15 +106,15 @@ final class DecodableRouteTests: XCTestCase {
 
          expectation.fulfill()
 
-         return { _, _ in
-           .json(post)
+         return { _, response in
+          response.successFuture(.json(post))
          }
        }
 
       app.get("\(wildcard: .all)") { request, response in
         XCTFail("The path expression didn't match the provided URL.")
         expectation.fulfill()
-        return .send("Oops")
+        return response.successFuture(.send("Oops"))
       }
 
        let request = try HTTPClient.Request(
@@ -134,13 +134,13 @@ final class DecodableRouteTests: XCTestCase {
 
      performHTTPTest { app, client in
        app.get("/post", transform: decodeQuery()) { (post: Post) in
-         { _, _ in
-           .json(post)
+         { _, response in
+          response.successFuture(.json(post))
          }
        }
 
        app.get("\(wildcard: .all)") { request, response in
-         .send("Oops")
+        response.successFuture(.send("Oops"))
        }
 
        let request = try HTTPClient.Request(
