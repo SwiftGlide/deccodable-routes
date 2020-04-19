@@ -1,7 +1,5 @@
 import Glide
 
-
-
 public func decodePath<T: Decodable>(
   _ decoder: JSONDecoder = JSONDecoder()
 ) -> (Request) throws -> T {

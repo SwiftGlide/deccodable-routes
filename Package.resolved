@@ -11,6 +11,15 @@
         }
       },
       {
+        "package": "Glide",
+        "repositoryURL": "https://github.com/SwiftGlide/glide",
+        "state": {
+          "branch": "master",
+          "revision": "78512a4cd2faae0cf3412e15e9696e069a35846e",
+          "version": null
+        }
+      },
+      {
         "package": "swift-nio",
         "repositoryURL": "https://github.com/apple/swift-nio",
         "state": {

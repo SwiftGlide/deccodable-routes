@@ -1,9 +1,9 @@
 import AsyncHTTPClient
 import XCTest
 import Glide
-@testable import DecodableRouting
+@testable import DecodableRoutes
 
-let testPort = 8070
+let testPort = 8170
 
 struct Post: Codable {
   var categoryID: Int
@@ -42,14 +42,14 @@ final class DecodableRouteTests: XCTestCase {
         expectation.fulfill()
 
         return { _, response in
-          response.successFuture(.json(post))
+          response.json(post)
         }
       }
 
       app.get("\(wildcard: .all)") { request, response in
         XCTFail("The path expression didn't match the provided URL.")
         expectation.fulfill()
-        return response.successFuture(.send("Oops"))
+        return response.send("Oops")
       }
 
       let request = try HTTPClient.Request(
@@ -70,12 +70,12 @@ final class DecodableRouteTests: XCTestCase {
     performHTTPTest { app, client in
       app.get("/\("categoryID", as: Int.self)/\("slug")", transform: decodeQuery()) { (post: Post) in
         { _, response in
-          response.successFuture(.json(post))
+          response.json(post)
         }
       }
 
       app.get("\(wildcard: .all)") { request, response in
-        response.successFuture(.send("Oops"))
+        response.send("Oops")
       }
 
       let request = try HTTPClient.Request(
@@ -107,14 +107,14 @@ final class DecodableRouteTests: XCTestCase {
          expectation.fulfill()
 
          return { _, response in
-          response.successFuture(.json(post))
+          response.json(post)
          }
        }
 
       app.get("\(wildcard: .all)") { request, response in
         XCTFail("The path expression didn't match the provided URL.")
         expectation.fulfill()
-        return response.successFuture(.send("Oops"))
+        return response.send("Oops")
       }
 
        let request = try HTTPClient.Request(
@@ -135,12 +135,12 @@ final class DecodableRouteTests: XCTestCase {
      performHTTPTest { app, client in
        app.get("/post", transform: decodeQuery()) { (post: Post) in
          { _, response in
-          response.successFuture(.json(post))
+          response.json(post)
          }
        }
 
        app.get("\(wildcard: .all)") { request, response in
-        response.successFuture(.send("Oops"))
+        response.send("Oops")
        }
 
        let request = try HTTPClient.Request(
@@ -154,7 +154,7 @@ final class DecodableRouteTests: XCTestCase {
        var buffer = response.body ?? ByteBufferAllocator().buffer(capacity: 0)
        let responseContent = buffer.readString(length: buffer.readableBytes) ?? ""
 
-       XCTAssertEqual(responseContent, "Oops")
+      XCTAssertEqual(response.status, .badRequest)
        expectation.fulfill()
      }
 
