@@ -12,10 +12,19 @@
       },
       {
         "package": "Glide",
-        "repositoryURL": "https://github.com/SwiftGlide/glide",
+        "repositoryURL": "https://github.com/SwiftGlide/glide.git",
         "state": {
           "branch": "master",
-          "revision": "78512a4cd2faae0cf3412e15e9696e069a35846e",
+          "revision": "add9a4cbdb280eefc8bdaae8f2adee3f3765275b",
+          "version": null
+        }
+      },
+      {
+        "package": "QueryStringCoder",
+        "repositoryURL": "https://github.com/SwiftGlide/query-string-coder.git",
+        "state": {
+          "branch": "master",
+          "revision": "b3212461d5b2a6a85d0dd67bab088207f87e7d79",
           "version": null
         }
       },

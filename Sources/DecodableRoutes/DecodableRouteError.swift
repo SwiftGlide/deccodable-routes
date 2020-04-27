@@ -2,10 +2,12 @@ import Glide
 
 public enum DecodableRouteError: AbortError {
   case missingRequestBody
+  case wrongContentType
 
   public var status: HTTPResponseStatus {
     switch self {
-    case .missingRequestBody:
+    case .missingRequestBody,
+         .wrongContentType:
       return .internalServerError
     }
   }
@@ -22,6 +24,8 @@ public enum DecodableRouteError: AbortError {
     switch self {
     case .missingRequestBody:
       return "Missing request body."
+    case .wrongContentType:
+      return "Wrong request Content-Type."
     }
   }
 }

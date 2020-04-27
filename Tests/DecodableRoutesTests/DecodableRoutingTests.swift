@@ -151,13 +151,44 @@ final class DecodableRouteTests: XCTestCase {
 
        let response = try client.execute(request: request).wait()
 
-       var buffer = response.body ?? ByteBufferAllocator().buffer(capacity: 0)
-       let responseContent = buffer.readString(length: buffer.readableBytes) ?? ""
-
       XCTAssertEqual(response.status, .badRequest)
        expectation.fulfill()
      }
 
      wait(for: [expectation], timeout: 5)
    }
+
+  func testURLEncodedFormDecodingSuccess() throws {
+    let expectation = XCTestExpectation()
+
+    performHTTPTest { app, client in
+     app.post("/post", transform: decodeURLEncodedForm()) { (post: Post) in
+        XCTAssertEqual(post.categoryID, 99)
+        XCTAssertEqual(post.slug, "my-post")
+
+        expectation.fulfill()
+
+        return { _, response in
+         response.json(post)
+        }
+      }
+
+     app.get("\(wildcard: .all)") { request, response in
+       XCTFail("The path expression didn't match the provided URL.")
+       expectation.fulfill()
+       return response.send("Oops")
+     }
+
+      let request = try HTTPClient.Request(
+        url: "http://localhost:\(testPort)/post",
+        method: .POST,
+        headers: .init([("Content-Type", "x-www-form-urlencoded")]),
+        body: .string("slug=my-post&categoryID=99")
+      )
+
+      _ = try client.execute(request: request).wait()
+    }
+
+    wait(for: [expectation], timeout: 5)
+  }
 }

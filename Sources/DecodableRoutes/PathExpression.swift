@@ -3,13 +3,14 @@ import Glide
 import NIOHTTP1
 import NIO
 
-public enum Transform<V> {
-  case pathParameters
-  case queryParameters
-  case body
-  case custom((Request) throws -> V)
+// TODO: Use in public API
+public enum Transform<T> {
+  case urlPath
+  case urlQuery
+  case bodyJSON
+  case boydURLEncoded
+  case custom((Request) throws -> T)
 }
-
 
 // MARK: - Glide PathExpression
 extension Router {
