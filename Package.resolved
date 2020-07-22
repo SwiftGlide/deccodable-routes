@@ -11,30 +11,30 @@
         }
       },
       {
-        "package": "Glide",
+        "package": "glide",
         "repositoryURL": "https://github.com/SwiftGlide/glide.git",
         "state": {
-          "branch": "master",
-          "revision": "add9a4cbdb280eefc8bdaae8f2adee3f3765275b",
-          "version": null
+          "branch": null,
+          "revision": "5806e5af19e93108beb5b201e4766306e0382903",
+          "version": "0.0.9"
         }
       },
       {
-        "package": "QueryStringCoder",
+        "package": "query-string-coder",
         "repositoryURL": "https://github.com/SwiftGlide/query-string-coder.git",
         "state": {
-          "branch": "master",
-          "revision": "b3212461d5b2a6a85d0dd67bab088207f87e7d79",
-          "version": null
+          "branch": null,
+          "revision": "ae380f5b1a3a6d335b832d66b3226da885c8f3e1",
+          "version": "0.0.3"
         }
       },
       {
         "package": "swift-nio",
-        "repositoryURL": "https://github.com/apple/swift-nio",
+        "repositoryURL": "https://github.com/apple/swift-nio.git",
         "state": {
           "branch": null,
-          "revision": "e876fb37410e0036b98b5361bb18e6854739572b",
-          "version": "2.16.0"
+          "revision": "8a865bd15e69526cbdfcfd7c47698eb20b2ba951",
+          "version": "2.19.0"
         }
       },
       {
@@ -42,8 +42,8 @@
         "repositoryURL": "https://github.com/apple/swift-nio-extras.git",
         "state": {
           "branch": null,
-          "revision": "b4dbfacff47fb8d0f9e0a422d8d37935a9f10570",
-          "version": "1.4.0"
+          "revision": "7cd24c0efcf9700033f671b6a8eaa64a77dd0b72",
+          "version": "1.5.1"
         }
       },
       {
@@ -51,8 +51,8 @@
         "repositoryURL": "https://github.com/apple/swift-nio-ssl.git",
         "state": {
           "branch": null,
-          "revision": "ae213938e151964aa691f0e902462fbe06baeeb6",
-          "version": "2.7.1"
+          "revision": "d381bc53edd9de88a75480a2b969bfc26d61ee76",
+          "version": "2.8.0"
         }
       }
     ]
