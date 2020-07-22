@@ -2,7 +2,7 @@
 import PackageDescription
 
 let package = Package(
-  name: "DecodableRoutes",
+  name: "decodable-routes",
   platforms: [
     .macOS(.v10_15)
   ],
