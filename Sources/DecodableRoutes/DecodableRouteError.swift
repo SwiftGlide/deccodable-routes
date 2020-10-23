@@ -1,6 +1,10 @@
 import Glide
 
 public enum DecodableRouteError: AbortError {
+  public var code: Int {
+    return 1010
+  }
+
   case missingRequestBody
   case wrongContentType
 

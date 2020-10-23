@@ -114,11 +114,11 @@ extension Router {
     with matcher: T,
     transform: @escaping (Request) throws -> V,
     throwing: Bool,
-    handler: @escaping (V) -> Middleware
-  ) -> Middleware {
+    handler: @escaping (V) -> ThrowingMiddleware
+  ) -> ThrowingMiddleware {
     { request, response in
       guard match(method, request: request, matcher: matcher) else {
-        return request.successFuture(.next)
+        return request.success(.next)
       }
 
       if throwing {
@@ -128,7 +128,7 @@ extension Router {
         if let decoded = try? transform(request) {
           return try handler(decoded)(request, response)
         } else {
-          return request.successFuture(.next)
+          return request.success(.next)
         }
       }
     }

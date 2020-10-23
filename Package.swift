@@ -10,7 +10,7 @@ let package = Package(
     .library(name: "DecodableRoutes", targets: ["DecodableRoutes"]),
   ],
   dependencies: [
-    .package(url: "https://github.com/SwiftGlide/glide.git", from: "0.0.9"),
+    .package(url: "https://github.com/SwiftGlide/glide.git", from: "0.3.0"),
     .package(url: "https://github.com/SwiftGlide/query-string-coder.git", from: "0.0.3"),
     .package(url: "https://github.com/swift-server/async-http-client.git", from: "1.0.0")
   ],
