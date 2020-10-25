@@ -34,7 +34,9 @@ public func decodeURLEncodedForm<T: Decodable>(
   _ decoder: QueryStringDecoder = .init()
 ) -> (Request) throws -> T {
   { request in
-    guard let contentType = request.head.headers["Content-Type"].first else {
+    guard let contentType = request.head.headers["Content-Type"].first,
+          let mimeType = MIMEType(contentType),
+          Set([.formURLEncoded]).contains(mimeType) else {
       throw DecodableRouteError.wrongContentType
     }
     guard let data = request.body else {
