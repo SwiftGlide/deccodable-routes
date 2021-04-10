@@ -64,7 +64,7 @@ final class DecodableRouteTests: XCTestCase {
     wait(for: [expectation], timeout: 5)
   }
 
-  func testPathDecodingSTrategySuccess() throws {
+  func testPathDecodingStrategySuccess() throws {
     let expectation = XCTestExpectation()
 
     performHTTPTest { app, client in
