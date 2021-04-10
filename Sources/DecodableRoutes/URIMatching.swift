@@ -5,7 +5,7 @@ extension Router {
     _ method: HTTPMethod = .GET,
     _ uriMatcher: T,
     transform: @escaping (Request) throws -> V,
-    throwing: Bool = true,
+    throwDecodingError: Bool = true,
     handler: @escaping (V) -> Middleware
   ) {
     use(
@@ -13,7 +13,7 @@ extension Router {
         method,
         with: uriMatcher,
         transform: transform,
-        throwing: throwing,
+        throwDecodingError: throwDecodingError,
         handler: handler
       )
     )
@@ -24,14 +24,14 @@ extension Router {
   public func get<T: URIMatching, V: Decodable>(
     _ uriMatcher: T,
     transform: @escaping (Request) throws -> V,
-    fallsThrough: Bool = false,
+    throwDecodingError: Bool = true,
     handler: @escaping (V) -> Middleware
   ) {
     route(
       .GET,
       uriMatcher,
       transform: transform,
-      throwing: !fallsThrough,
+      throwDecodingError: throwDecodingError,
       handler: handler
     )
   }
@@ -40,14 +40,14 @@ extension Router {
   public func post<T: URIMatching, V: Decodable>(
     _ uriMatcher: T,
     transform: @escaping (Request) throws -> V,
-    fallsThrough: Bool = false,
+    throwDecodingError: Bool = true,
     handler: @escaping (V) -> Middleware
   ) {
     route(
       .POST,
       uriMatcher,
       transform: transform,
-      throwing: !fallsThrough,
+      throwDecodingError: throwDecodingError,
       handler: handler
     )
   }
@@ -56,14 +56,14 @@ extension Router {
   public func put<T: URIMatching, V: Decodable>(
     _ uriMatcher: T,
     transform: @escaping (Request) throws -> V,
-    fallsThrough: Bool = false,
+    throwDecodingError: Bool = true,
     handler: @escaping (V) -> Middleware
   ) {
     route(
       .PUT,
       uriMatcher,
       transform: transform,
-      throwing: !fallsThrough,
+      throwDecodingError: throwDecodingError,
       handler: handler
     )
   }
@@ -72,14 +72,14 @@ extension Router {
   public func patch<T: URIMatching, V: Decodable>(
     _ uriMatcher: T,
     transform: @escaping (Request) throws -> V,
-    fallsThrough: Bool = false,
+    throwDecodingError: Bool = true,
     handler: @escaping (V) -> Middleware
   ) {
     route(
       .PATCH,
       uriMatcher,
       transform: transform,
-      throwing: !fallsThrough,
+      throwDecodingError: throwDecodingError,
       handler: handler
     )
   }
@@ -88,14 +88,14 @@ extension Router {
   public func delete<T: URIMatching, V: Decodable>(
     _ uriMatcher: T,
     transform: @escaping (Request) throws -> V,
-    fallsThrough: Bool = false,
+    throwDecodingError: Bool = true,
     handler: @escaping (V) -> Middleware
   ) {
     route(
       .DELETE,
       uriMatcher,
       transform: transform,
-      throwing: !fallsThrough,
+      throwDecodingError: throwDecodingError,
       handler: handler
     )
   }

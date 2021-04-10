@@ -29,7 +29,7 @@ extension Router {
     _ method: HTTPMethod = .GET,
     _ expression: PathExpression,
     transform: @escaping (Request) throws -> V,
-    throwing: Bool = true,
+    throwDecodingError: Bool = true,
     handler: @escaping (V) -> ThrowingMiddleware
   ) {
     use(
@@ -37,7 +37,7 @@ extension Router {
         method,
         with: expression,
         transform: transform,
-        throwing: throwing,
+        throwDecodingError: throwDecodingError,
         handler: handler
       )
     )
@@ -47,14 +47,14 @@ extension Router {
     _ method: HTTPMethod = .GET,
     _ expression: PathExpression,
     strategy: Strategy,
-    throwing: Bool = true,
+    throwDecodingError: Bool = true,
     handler: @escaping (V) -> ThrowingMiddleware
   ) {
     route(
       method,
       expression,
       transform: strategy.transform(V.self),
-      throwing: throwing,
+      throwDecodingError: throwDecodingError,
       handler: handler
     )
   }
@@ -63,14 +63,14 @@ extension Router {
   public func get<V: Decodable>(
     _ expression: PathExpression,
     transform: @escaping (Request) throws -> V,
-    fallsThrough: Bool = false,
+    throwDecodingError: Bool = true,
     handler: @escaping (V) -> ThrowingMiddleware
   ) {
     route(
       .GET,
       expression,
       transform: transform,
-      throwing: !fallsThrough,
+      throwDecodingError: throwDecodingError,
       handler: handler
     )
   }
@@ -78,14 +78,14 @@ extension Router {
   public func get<V: Decodable>(
     _ expression: PathExpression,
     _ strategy: Strategy,
-    fallsThrough: Bool = false,
+    throwDecodingError: Bool = true,
     handler: @escaping (V) -> ThrowingMiddleware
   ) {
     route(
       .GET,
       expression,
       strategy: strategy,
-      throwing: !fallsThrough,
+      throwDecodingError: throwDecodingError,
       handler: handler
     )
   }
@@ -93,14 +93,14 @@ extension Router {
   public func post<V: Decodable>(
     _ expression: PathExpression,
     transform: @escaping (Request) throws -> V,
-    fallsThrough: Bool = false,
+    throwDecodingError: Bool = true,
     handler: @escaping (V) -> ThrowingMiddleware
   ) {
     route(
       .POST,
       expression,
       transform: transform,
-      throwing: !fallsThrough,
+      throwDecodingError: throwDecodingError,
       handler: handler
     )
   }
@@ -108,14 +108,14 @@ extension Router {
   public func post<V: Decodable>(
     _ expression: PathExpression,
     _ strategy: Strategy,
-    fallsThrough: Bool = false,
+    throwDecodingError: Bool = true,
     handler: @escaping (V) -> ThrowingMiddleware
   ) {
     route(
       .POST,
       expression,
       strategy: strategy,
-      throwing: !fallsThrough,
+      throwDecodingError: throwDecodingError,
       handler: handler
     )
   }
@@ -123,14 +123,14 @@ extension Router {
   public func put<V: Decodable>(
     _ expression: PathExpression,
     transform: @escaping (Request) throws -> V,
-    fallsThrough: Bool = false,
+    throwDecodingError: Bool = true,
     handler: @escaping (V) -> ThrowingMiddleware
   ) {
     route(
       .PUT,
       expression,
       transform: transform,
-      throwing: !fallsThrough,
+      throwDecodingError: throwDecodingError,
       handler: handler
     )
   }
@@ -138,30 +138,29 @@ extension Router {
   public func put<V: Decodable>(
     _ expression: PathExpression,
     _ strategy: Strategy,
-    fallsThrough: Bool = false,
+    throwDecodingError: Bool = true,
     handler: @escaping (V) -> ThrowingMiddleware
   ) {
     route(
       .PUT,
       expression,
       strategy: strategy,
-      throwing: !fallsThrough,
+      throwDecodingError: throwDecodingError,
       handler: handler
     )
   }
-
   
   public func patch<V: Decodable>(
     _ expression: PathExpression,
     transform: @escaping (Request) throws -> V,
-    fallsThrough: Bool = false,
+    throwDecodingError: Bool = true,
     handler: @escaping (V) -> ThrowingMiddleware
   ) {
     route(
       .PATCH,
       expression,
       transform: transform,
-      throwing: !fallsThrough,
+      throwDecodingError: throwDecodingError,
       handler: handler
     )
   }
@@ -169,14 +168,14 @@ extension Router {
   public func patch<V: Decodable>(
     _ expression: PathExpression,
     _ strategy: Strategy,
-    fallsThrough: Bool = false,
+    throwDecodingError: Bool = true,
     handler: @escaping (V) -> ThrowingMiddleware
   ) {
     route(
       .PATCH,
       expression,
       strategy: strategy,
-      throwing: !fallsThrough,
+      throwDecodingError: throwDecodingError,
       handler: handler
     )
   }
@@ -184,14 +183,14 @@ extension Router {
   public func delete<V: Decodable>(
     _ expression: PathExpression,
     transform: @escaping (Request) throws -> V,
-    fallsThrough: Bool = false,
+    throwDecodingError: Bool = true,
     handler: @escaping (V) -> ThrowingMiddleware
   ) {
     route(
       .DELETE,
       expression,
       transform: transform,
-      throwing: !fallsThrough,
+      throwDecodingError: throwDecodingError,
       handler: handler
     )
   }
@@ -199,14 +198,14 @@ extension Router {
   public func delete<V: Decodable>(
     _ expression: PathExpression,
     _ strategy: Strategy,
-    fallsThrough: Bool = false,
+    throwDecodingError: Bool = true,
     handler: @escaping (V) -> ThrowingMiddleware
   ) {
     route(
       .DELETE,
       expression,
       strategy: strategy,
-      throwing: !fallsThrough,
+      throwDecodingError: throwDecodingError,
       handler: handler
     )
   }
@@ -216,7 +215,7 @@ extension Router {
     _ method: HTTPMethod = .GET,
     with matcher: T,
     transform: @escaping (Request) throws -> V,
-    throwing: Bool,
+    throwDecodingError: Bool,
     handler: @escaping (V) -> ThrowingMiddleware
   ) -> ThrowingMiddleware {
     { request, response in
@@ -224,7 +223,7 @@ extension Router {
         return request.success(.next)
       }
 
-      if throwing {
+      if throwDecodingError {
         let decoded = try transform(request)
         return try handler(decoded)(request, response)
       } else {

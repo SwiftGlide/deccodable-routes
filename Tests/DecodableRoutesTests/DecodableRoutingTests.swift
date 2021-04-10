@@ -31,7 +31,7 @@ final class DecodableRouteTests: XCTestCase {
     }
   }
 
-  func testPathDecodingSuccess() throws {
+  func testPathDecodingSucceeds() throws {
     let expectation = XCTestExpectation()
 
     performHTTPTest { app, client in
@@ -64,7 +64,7 @@ final class DecodableRouteTests: XCTestCase {
     wait(for: [expectation], timeout: 5)
   }
 
-  func testPathDecodingStrategySuccess() throws {
+  func testPathDecodingStrategySucceeds() throws {
     let expectation = XCTestExpectation()
 
     performHTTPTest { app, client in
@@ -97,18 +97,25 @@ final class DecodableRouteTests: XCTestCase {
     wait(for: [expectation], timeout: 5)
   }
 
-  func testPathDecodingFailure() throws {
+  func testPathDecodingFails() throws {
     let expectation = XCTestExpectation()
 
     performHTTPTest { app, client in
-      app.get("/\("categoryID", as: Int.self)/\("slug")", transform: decodeQuery()) { (post: Post) in
+      app.get(
+        "/\("categoryID", as: Int.self)/\("slug")",
+        transform: decodeQuery()
+      ) { (post: Post) in
         { _, response in
-          response.json(post)
+          XCTFail("The path expression shouldn't match this middlewware.")
+          expectation.fulfill()
+          return response.json(post)
         }
       }
 
       app.get("\(wildcard: .all)") { request, response in
-        response.send("Oops")
+        XCTAssert(true)
+        expectation.fulfill()
+        return response.send("Oops")
       }
 
       let request = try HTTPClient.Request(
@@ -117,19 +124,47 @@ final class DecodableRouteTests: XCTestCase {
         headers: .init()
       )
 
-      let response = try client.execute(request: request).wait()
-
-      var buffer = response.body ?? ByteBufferAllocator().buffer(capacity: 0)
-      let responseContent = buffer.readString(length: buffer.readableBytes) ?? ""
-
-      XCTAssertEqual(responseContent, "Oops")
-      expectation.fulfill()
+      _ = try client.execute(request: request).wait()
     }
 
     wait(for: [expectation], timeout: 5)
   }
 
-  func testQueryDecodingSuccess() throws {
+  func testPathDecodingFailsThrowingError() throws {
+    let expectation = XCTestExpectation()
+
+    performHTTPTest { app, client in
+      app.post(
+        "/post",
+        .bodyURLEncoded,
+        throwDecodingError: true
+      ) { (post: Post) in
+        { _, response in
+          XCTFail("The path expression shouldn't match this middlewware.")
+          expectation.fulfill()
+          return response.json(post)
+        }
+      }
+
+      app.catch { errors, request, response in
+        XCTAssert(errors[0] is DecodingError)
+        expectation.fulfill()
+      }
+
+      let request = try HTTPClient.Request(
+        url: "http://localhost:\(testPort)/post",
+        method: .POST,
+        headers: .init([("Content-Type", "application/x-www-form-urlencoded")]),
+        body: .string("foo=my-post&categoryID=99")
+      )
+
+      _ = try client.execute(request: request).wait()
+    }
+
+    wait(for: [expectation], timeout: 5)
+  }
+
+  func testQueryDecodingSucceeds() throws {
      let expectation = XCTestExpectation()
 
      performHTTPTest { app, client in
@@ -162,7 +197,7 @@ final class DecodableRouteTests: XCTestCase {
      wait(for: [expectation], timeout: 5)
    }
 
-   func testQueryDecodingFailure() throws {
+   func testQueryDecodingFails() throws {
      let expectation = XCTestExpectation()
 
      performHTTPTest { app, client in
@@ -191,7 +226,7 @@ final class DecodableRouteTests: XCTestCase {
      wait(for: [expectation], timeout: 5)
    }
 
-  func testURLEncodedFormDecodingSuccess() throws {
+  func testURLEncodedFormDecodingSucceeds() throws {
     let expectation = XCTestExpectation()
 
     performHTTPTest { app, client in
