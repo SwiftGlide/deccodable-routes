@@ -64,6 +64,39 @@ final class DecodableRouteTests: XCTestCase {
     wait(for: [expectation], timeout: 5)
   }
 
+  func testPathDecodingSTrategySuccess() throws {
+    let expectation = XCTestExpectation()
+
+    performHTTPTest { app, client in
+      app.get("/\("categoryID", as: Int.self)/\("slug")", .urlPath) { (post: Post) in
+        XCTAssertEqual(post.categoryID, 99)
+        XCTAssertEqual(post.slug, "my-post")
+
+        expectation.fulfill()
+
+        return { _, response in
+          response.json(post)
+        }
+      }
+
+      app.get("\(wildcard: .all)") { request, response in
+        XCTFail("The path expression didn't match the provided URL.")
+        expectation.fulfill()
+        return response.send("Oops")
+      }
+
+      let request = try HTTPClient.Request(
+        url: "http://localhost:\(testPort)/99/my-post",
+        method: .GET,
+        headers: .init()
+      )
+
+      _ = try client.execute(request: request).wait()
+    }
+
+    wait(for: [expectation], timeout: 5)
+  }
+
   func testPathDecodingFailure() throws {
     let expectation = XCTestExpectation()
 

@@ -4,12 +4,24 @@ import NIOHTTP1
 import NIO
 
 // TODO: Use in public API
-public enum Transform<T> {
+public enum Strategy {
   case urlPath
   case urlQuery
   case bodyJSON
-  case boydURLEncoded
-  case custom((Request) throws -> T)
+  case bodyURLEncoded
+
+  func transform<T: Decodable>(_ type: T.Type) -> (Request) throws -> T {
+    switch self {
+    case .urlPath:
+      return decodePath()
+    case .urlQuery:
+      return decodeQuery()
+    case .bodyJSON:
+      return decodeBody()
+    case .bodyURLEncoded:
+      return decodeURLEncodedForm()
+    }
+  }
 }
 
 // MARK: - Glide PathExpression
@@ -32,6 +44,24 @@ extension Router {
     )
   }
 
+  public func route<V: Decodable>(
+    _ method: HTTPMethod = .GET,
+    _ expression: PathExpression,
+    strategy: Strategy,
+    throwing: Bool = true,
+    handler: @escaping (V) -> Middleware
+  ) {
+    use(
+      Router.middleware(
+        method,
+        with: expression,
+        transform: strategy.transform(V.self),
+        throwing: throwing,
+        handler: handler
+      )
+    )
+  }
+
   // MARK: - HTTP Method Helpers
   public func get<V: Decodable>(
     _ expression: PathExpression,
@@ -43,6 +73,21 @@ extension Router {
       .GET,
       expression,
       transform: transform,
+      throwing: !fallsThrough,
+      handler: handler
+    )
+  }
+
+  public func get<V: Decodable>(
+    _ expression: PathExpression,
+    _ strategy: Strategy,
+    fallsThrough: Bool = false,
+    handler: @escaping (V) -> Middleware
+  ) {
+    route(
+      .GET,
+      expression,
+      strategy: strategy,
       throwing: !fallsThrough,
       handler: handler
     )
@@ -63,6 +108,21 @@ extension Router {
     )
   }
 
+  public func post<V: Decodable>(
+    _ expression: PathExpression,
+    _ strategy: Strategy,
+    fallsThrough: Bool = false,
+    handler: @escaping (V) -> Middleware
+  ) {
+    route(
+      .POST,
+      expression,
+      strategy: strategy,
+      throwing: !fallsThrough,
+      handler: handler
+    )
+  }
+
   public func put<V: Decodable>(
     _ expression: PathExpression,
     transform: @escaping (Request) throws -> V,
@@ -77,6 +137,22 @@ extension Router {
       handler: handler
     )
   }
+
+  public func put<V: Decodable>(
+    _ expression: PathExpression,
+    _ strategy: Strategy,
+    fallsThrough: Bool = false,
+    handler: @escaping (V) -> Middleware
+  ) {
+    route(
+      .PUT,
+      expression,
+      strategy: strategy,
+      throwing: !fallsThrough,
+      handler: handler
+    )
+  }
+
   
   public func patch<V: Decodable>(
     _ expression: PathExpression,
@@ -93,6 +169,21 @@ extension Router {
     )
   }
 
+  public func patch<V: Decodable>(
+    _ expression: PathExpression,
+    _ strategy: Strategy,
+    fallsThrough: Bool = false,
+    handler: @escaping (V) -> Middleware
+  ) {
+    route(
+      .PATCH,
+      expression,
+      strategy: strategy,
+      throwing: !fallsThrough,
+      handler: handler
+    )
+  }
+
   public func delete<V: Decodable>(
     _ expression: PathExpression,
     transform: @escaping (Request) throws -> V,
@@ -103,6 +194,21 @@ extension Router {
       .DELETE,
       expression,
       transform: transform,
+      throwing: !fallsThrough,
+      handler: handler
+    )
+  }
+
+  public func delete<V: Decodable>(
+    _ expression: PathExpression,
+    _ strategy: Strategy,
+    fallsThrough: Bool = false,
+    handler: @escaping (V) -> Middleware
+  ) {
+    route(
+      .DELETE,
+      expression,
+      strategy: strategy,
       throwing: !fallsThrough,
       handler: handler
     )
