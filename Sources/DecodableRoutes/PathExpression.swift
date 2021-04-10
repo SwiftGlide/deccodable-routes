@@ -3,7 +3,6 @@ import Glide
 import NIOHTTP1
 import NIO
 
-// TODO: Use in public API
 public enum Strategy {
   case urlPath
   case urlQuery
