@@ -31,7 +31,7 @@ extension Router {
     _ expression: PathExpression,
     transform: @escaping (Request) throws -> V,
     throwing: Bool = true,
-    handler: @escaping (V) -> Middleware
+    handler: @escaping (V) -> ThrowingMiddleware
   ) {
     use(
       Router.middleware(
@@ -49,16 +49,14 @@ extension Router {
     _ expression: PathExpression,
     strategy: Strategy,
     throwing: Bool = true,
-    handler: @escaping (V) -> Middleware
+    handler: @escaping (V) -> ThrowingMiddleware
   ) {
-    use(
-      Router.middleware(
-        method,
-        with: expression,
-        transform: strategy.transform(V.self),
-        throwing: throwing,
-        handler: handler
-      )
+    route(
+      method,
+      expression,
+      transform: strategy.transform(V.self),
+      throwing: throwing,
+      handler: handler
     )
   }
 
@@ -67,7 +65,7 @@ extension Router {
     _ expression: PathExpression,
     transform: @escaping (Request) throws -> V,
     fallsThrough: Bool = false,
-    handler: @escaping (V) -> Middleware
+    handler: @escaping (V) -> ThrowingMiddleware
   ) {
     route(
       .GET,
@@ -82,7 +80,7 @@ extension Router {
     _ expression: PathExpression,
     _ strategy: Strategy,
     fallsThrough: Bool = false,
-    handler: @escaping (V) -> Middleware
+    handler: @escaping (V) -> ThrowingMiddleware
   ) {
     route(
       .GET,
@@ -97,7 +95,7 @@ extension Router {
     _ expression: PathExpression,
     transform: @escaping (Request) throws -> V,
     fallsThrough: Bool = false,
-    handler: @escaping (V) -> Middleware
+    handler: @escaping (V) -> ThrowingMiddleware
   ) {
     route(
       .POST,
@@ -112,7 +110,7 @@ extension Router {
     _ expression: PathExpression,
     _ strategy: Strategy,
     fallsThrough: Bool = false,
-    handler: @escaping (V) -> Middleware
+    handler: @escaping (V) -> ThrowingMiddleware
   ) {
     route(
       .POST,
@@ -127,7 +125,7 @@ extension Router {
     _ expression: PathExpression,
     transform: @escaping (Request) throws -> V,
     fallsThrough: Bool = false,
-    handler: @escaping (V) -> Middleware
+    handler: @escaping (V) -> ThrowingMiddleware
   ) {
     route(
       .PUT,
@@ -142,7 +140,7 @@ extension Router {
     _ expression: PathExpression,
     _ strategy: Strategy,
     fallsThrough: Bool = false,
-    handler: @escaping (V) -> Middleware
+    handler: @escaping (V) -> ThrowingMiddleware
   ) {
     route(
       .PUT,
@@ -158,7 +156,7 @@ extension Router {
     _ expression: PathExpression,
     transform: @escaping (Request) throws -> V,
     fallsThrough: Bool = false,
-    handler: @escaping (V) -> Middleware
+    handler: @escaping (V) -> ThrowingMiddleware
   ) {
     route(
       .PATCH,
@@ -173,7 +171,7 @@ extension Router {
     _ expression: PathExpression,
     _ strategy: Strategy,
     fallsThrough: Bool = false,
-    handler: @escaping (V) -> Middleware
+    handler: @escaping (V) -> ThrowingMiddleware
   ) {
     route(
       .PATCH,
@@ -188,7 +186,7 @@ extension Router {
     _ expression: PathExpression,
     transform: @escaping (Request) throws -> V,
     fallsThrough: Bool = false,
-    handler: @escaping (V) -> Middleware
+    handler: @escaping (V) -> ThrowingMiddleware
   ) {
     route(
       .DELETE,
@@ -203,7 +201,7 @@ extension Router {
     _ expression: PathExpression,
     _ strategy: Strategy,
     fallsThrough: Bool = false,
-    handler: @escaping (V) -> Middleware
+    handler: @escaping (V) -> ThrowingMiddleware
   ) {
     route(
       .DELETE,

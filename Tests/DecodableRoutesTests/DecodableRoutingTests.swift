@@ -195,7 +195,7 @@ final class DecodableRouteTests: XCTestCase {
     let expectation = XCTestExpectation()
 
     performHTTPTest { app, client in
-     app.post("/post", transform: decodeURLEncodedForm()) { (post: Post) in
+      app.post("/post", .bodyURLEncoded) { (post: Post) in
         XCTAssertEqual(post.categoryID, 99)
         XCTAssertEqual(post.slug, "my-post")
 
@@ -215,7 +215,7 @@ final class DecodableRouteTests: XCTestCase {
       let request = try HTTPClient.Request(
         url: "http://localhost:\(testPort)/post",
         method: .POST,
-        headers: .init([("Content-Type", "x-www-form-urlencoded")]),
+        headers: .init([("Content-Type", "application/x-www-form-urlencoded")]),
         body: .string("slug=my-post&categoryID=99")
       )
 

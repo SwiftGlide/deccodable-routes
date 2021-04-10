@@ -39,9 +39,11 @@ public func decodeURLEncodedForm<T: Decodable>(
           Set([.formURLEncoded]).contains(mimeType) else {
       throw DecodableRouteError.wrongContentType
     }
+
     guard let data = request.body else {
       throw DecodableRouteError.missingRequestBody
     }
+    
     return try decoder.decode(T.self, from: data)
   }
 }
